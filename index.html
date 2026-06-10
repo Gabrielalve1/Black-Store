@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLACK STORE | São Carlos - Streetwear, Nike, Adidas</title>
+    <meta name="description" content="BLACK STORE - A seleção definitiva de streetwear em São Carlos. Nike, Adidas, bonés, tênis e roupas exclusivas.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #050505;
+            --bg-dark: #0a0a0a;
+            --card-bg: #111111;
+            --text: #ffffff;
+            --text-muted: #888888;
+            --border: #333333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 { font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
+        a { text-decoration: none; color: inherit; transition: 0.3s ease; }
+        ul { list-style: none; }
+        button { cursor: pointer; transition: 0.3s ease; }
+
+        /* ===== NAVBAR ===== */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo { 
+            font-size: 28px; 
+            letter-spacing: 2px; 
+            font-weight: 700;
+        }
+        .logo span { color: var(--text-muted); }
+
+        .nav-links { 
+            display: flex; 
+            gap: 40px; 
+        }
+        .nav-links a { 
+            font-size: 12px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            color: var(--text-muted);
+            position: relative;
+        }
+        .nav-links a:hover { 
+            color: var(--text);
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--text);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .btn-nav {
+            border: 1px solid var(--text);
+            padding: 10px 25px;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            background: transparent;
+            color: var(--text);
+        }
+        .btn-nav:hover { 
+            background: var(--text); 
+            color: var(--bg);
+        }
+
+        .menu-toggle { 
+            display: none; 
+            cursor: pointer; 
+            font-size: 24px;
+            color: var(--text);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            margin-top: 70px;
+            background: var(--bg);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('assets/imagem/ChatGPT Image 9 de jun. de 2026, 23_01_38.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 0;
+            transform: translateZ(0);
+        }
+
+        .carousel-container {
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .carousel-image-container {
+            pointer-events: auto;
+        }
+
+
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            padding: 40px 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-tag {
+            display: inline-block;
+            border: 1px solid var(--text-muted);
+            padding: 8px 20px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            color: var(--text-muted);
+        }
+
+        .hero-title {
+            font-size: clamp(50px, 12vw, 140px);
+            line-height: 0.9;
+            margin-bottom: 25px;
+            letter-spacing: -1px;
+            font-weight: 700;
+        }
+
+        .hero-description {
+            color: #ccc; 
+            margin-bottom: 35px; 
+            max-width: 600px; 
+            margin-left: auto; 
+            margin-right: auto;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background: var(--text);
+            color: var(--bg);
+            padding: 16px 45px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .hero-btn:hover { 
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+        }
+
+        /* CARROSSEL */
+        .carousel-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            z-index: 1;
+        }
+
+        .carousel-slide.active {
+            opacity: 1;
+        }
+
+        /* CARROSSEL IMAGEM ESTILO CARD */
+        .carousel-image-container {
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 3/4;
+            border: 3px solid var(--text);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--card-bg);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+            position: relative;
+            z-index: 2;
+        }
+
+        .carousel-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .carousel-slide {
+                padding: 40px 20px;
+            }
+
+            .carousel-image-container {
+                max-width: 400px;
+            }
+        }
+
+        .carousel-controls {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 5;
+        }
+
+        .carousel-btn {
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--text);
+            background: transparent;
+            color: var(--text);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-btn:hover {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 5;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--text);
+            border-radius: 50%;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--text);
+            width: 30px;
+            border-radius: 6px;
+        }
+
+        /* ===== MARQUEE ===== */
+        .marquee {
+            background: var(--text);
+            color: var(--bg);
+            padding: 15px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            border-bottom: 1px solid var(--border);
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: scroll 25s linear infinite;
+            font-family: 'Bebas Neue';
+            font-size: 22px;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ===== SEÇÕES ===== */
+        .section { 
+            padding: 100px 5%; 
+            border-top: 1px solid var(--border);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 60px;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .section-title { 
+            font-size: 60px; 
+            line-height: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .filters { 
+            display: flex; 
+            gap: 12px; 
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 10px 18px;
+            text-transform: uppercase;
+            font-size: 11px;
+            transition: 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .filter-btn.active { 
+            border-color: var(--text); 
+            color: var(--text);
+            background: var(--text);
+            color: var(--bg);
+        }
+        .filter-btn:hover { 
+            border-color: var(--text);
+            color: var(--text);
+        }
+
+        /* ===== PRODUTOS ===== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+
+        .product-card {
+            background: var(--bg);
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 420px;
+        }
+
+        .product-card:hover { 
+            background: var(--card-bg);
+            z-index: 10;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.8);
+        }
+
+        .p-img-box {
+            width: 100%;
+            aspect-ratio: 3/4;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            margin-bottom: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .p-img-box::before {
+            content: '📷';
+            font-size: 50px;
+            opacity: 0.15;
+            position: absolute;
+            z-index: 1;
+        }
+        
+        .p-img-box img {
+            width: 100%; 
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            filter: grayscale(15%);
+        }
+        
+        .product-card:hover .p-img-box img { 
+            transform: scale(1.08); 
+            filter: grayscale(0%);
+        }
+
+        .p-info h3 { 
+            font-size: 22px; 
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        .p-info p { 
+            color: var(--text-muted); 
+            font-size: 13px; 
+            margin-bottom: 16px;
+        }
+        
+        .p-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            padding-top: 15px;
+            margin-top: auto;
+        }
+        .price { 
+            font-size: 18px; 
+            font-weight: 700;
+        }
+        .buy-link { 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            border-bottom: 1px solid var(--text); 
+            padding-bottom: 2px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .buy-link:hover {
+            opacity: 0.8;
+        }
+
+        /* ===== LOCALIZAÇÃO ===== */
+        .location-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 1px solid var(--border);
+        }
+        
+        .loc-info {
+            padding: 80px 5%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--card-bg);
+        }
+        
+        .loc-map {
+            width: 100%;
+            min-height: 500px;
+        }
+        
+        .loc-map iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            border: none;
+        }
+        
+        .info-row { 
+            margin-bottom: 40px;
+        }
+        .info-label { 
+            font-size: 11px; 
+            text-transform: uppercase; 
+            color: var(--text-muted); 
+            letter-spacing: 1.5px; 
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .info-value { 
+            font-size: 18px; 
+            font-weight: 300;
+            line-height: 1.8;
+        }
+
+        .btn-zap {
+            border: 1px solid var(--text);
+            padding: 14px 30px;
+            font-size: 13px;
+            text-transform: uppercase;
+            font-weight: 600;
+            background: transparent;
+            color: var(--text);
+            display: inline-block;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+        .btn-zap:hover {
+            background: #25D366;
+            border-color: #25D366;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 50px 5%;
+            border-top: 1px solid var(--border);
+            background: var(--card-bg);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-section h4 {
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .footer-section a:hover {
+            color: var(--text);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border);
+            padding-top: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ===== WHATSAPP FLOAT ===== */
+        .wpp-float {
+            position: fixed;
+            bottom: 30px; 
+            right: 30px;
+            background: #25D366;
+            width: 60px; 
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            box-shadow: 0 4px 25px rgba(37,211,102,0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 25px rgba(37,211,102,0.4); }
+            50% { box-shadow: 0 4px 25px rgba(37,211,102,0.8); }
+        }
+
+        .wpp-float:hover {
+            transform: scale(1.1);
+            animation: none;
+        }
+
+        .wpp-float svg { 
+            width: 32px; 
+            height: 32px; 
+            fill: white;
+        }
+
+        /* ===== RESPONSIVO ===== */
+        @media (max-width: 1024px) {
+            .section { padding: 80px 5%; }
+            .section-header { margin-bottom: 40px; }
+            .section-title { font-size: 50px; }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 5%;
+            }
+
+            .nav-links { 
+                display: none; 
+            }
+            .menu-toggle { 
+                display: block;
+            }
+
+            .hero {
+                height: 80vh;
+                margin-top: 60px;
+            }
+
+            .hero-title { 
+                font-size: 60px;
+                margin-bottom: 15px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+            }
+
+            .section-header { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 20px;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .location-section { 
+                grid-template-columns: 1fr;
+            }
+
+            .loc-info {
+                order: 2;
+            }
+
+            .loc-map {
+                order: 1;
+                min-height: 400px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .wpp-float {
+                width: 50px;
+                height: 50px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 20px;
+            }
+
+            .hero-title { 
+                font-size: 45px;
+            }
+
+            .section-title {
+                font-size: 40px;
+            }
+
+            .btn-nav, .hero-btn {
+                padding: 10px 20px;
+                font-size: 11px;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .marquee-content {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo">BLACK <span>STORE</span></div>
+        <ul class="nav-links">
+            <li><a href="#home">Início</a></li>
+            <li><a href="#colecao">Coleção</a></li>
+            <li><a href="#localizacao">Localização</a></li>
+        </ul>
+        <a href="https://wa.me/5516991821047" class="btn-nav" target="_blank">Comprar</a>
+        <div class="menu-toggle">☰</div>
+    </nav>
+
+    <!-- HERO SECTION COM CARROSSEL -->
+    <section class="hero" id="home">
+        <div class="hero-bg" aria-hidden="true"></div>
+
+        <!-- CARROSSEL (removido) -->
+        <!--
+        <div class="carousel-container">
+            <div class="carousel-slide active">
+
+                <div class="carousel-image-container">
+<img src="assets/imagem/ChatGPT Image 9 de jun. de 2026, 23_01_38.png" alt="Carrossel 1">
+                </div>
+            </div>
+            <div class="carousel-slide">
+                <div class="carousel-image-container">
+<img src="assets/imagem/ChatGPT Image 9 de jun. de 2026, 23_01_38.png" alt="Carrossel 2">
+                </div>
+            </div>
+        </div>
+        -->
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            
+          
+        </div>
+        <div class="carousel-controls">
+            <button class="carousel-btn prev" onclick="changeCarouselSlide(-1)">❮</button>
+            <button class="carousel-btn next" onclick="changeCarouselSlide(1)">❯</button>
+        </div>
+        <div class="carousel-dots">
+            <span class="dot active" onclick="currentCarouselSlide(0)"></span>
+            <span class="dot" onclick="currentCarouselSlide(1)"></span>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee">
+        <div class="marquee-content">
+            ★ NIKE ★ ADIDAS ★ STREETWEAR ★ BONÉS ★ TÊNIS ★ BLACK STORE ★ NIKE ★ ADIDAS ★ STREETWEAR ★ BONÉS ★ TÊNIS ★ BLACK STORE ★
+        </div>
+    </div>
+
+    <!-- COLEÇÃO -->
+    <section class="section" id="colecao">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">DROP<br>ATUAL</h2>
+            </div>
+            <div class="filters">
+                <button class="filter-btn active" onclick="filterProducts('all', this)">Todos</button>
+                <button class="filter-btn" onclick="filterProducts('nike', this)">Nike</button>
+                <button class="filter-btn" onclick="filterProducts('adidas', this)">Adidas</button>
+                <button class="filter-btn" onclick="filterProducts('roupa', this)">Roupas</button>
+            </div>
+        </div>
+
+        <div class="products-grid">
+            <!-- Produto 1 -->
+            <div class="product-card" data-category="nike">
+                <div class="p-img-box">
+                    <img src="assets/imagem/666392076154235454.webp" alt="Air Max Red">
+                </div>
+                <div class="p-info">
+                    <h3>Air Max Red</h3>
+                    <p>Nike Sportswear</p>
+                    <div class="p-footer">
+                        <span class="price">R$ 499,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Air%20Max%20Red" class="buy-link" target="_blank">Comprar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Produto 2 -->
+            <div class="product-card" data-category="roupa">
+                <div class="p-img-box">
+                    <img src="assets/imagem/736620082828144653.jpg" alt="Oversized Tee">
+                </div>
+                <div class="p-info">
+                    <h3>Oversized Tee</h3>
+                    <p>Black Store Basic</p>
+                    <div class="p-footer">
+                        <span class="price">R$ 89,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20a%20Camiseta%20Oversized" class="buy-link" target="_blank">Comprar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Produto 3 -->
+            <div class="product-card" data-category="adidas">
+                <div class="p-img-box">
+                    <img src="assets/imagem/802837071109668609.jpg" alt="Windbreaker">
+                </div>
+                <div class="p-info">
+                    <h3>Windbreaker</h3>
+                    <p>Adidas Originals</p>
+                    <div class="p-footer">
+                        <span class="price">R$ 349,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20a%20Jaqueta%20Adidas" class="buy-link" target="_blank">Comprar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Produto 4 -->
+            <div class="product-card" data-category="roupa">
+                <div class="p-img-box">
+                    <img src="assets/imagem/834643743479198294.jpg" alt="Cargo Shorts">
+                </div>
+                <div class="p-info">
+                    <h3>Cargo Shorts</h3>
+                    <p>Urban Style</p>
+                    <div class="p-footer">
+                        <span class="price">R$ 129,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Shorts%20Cargo" class="buy-link" target="_blank">Comprar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Produto 5 -->
+            <div class="product-card" data-category="nike">
+                <div class="p-img-box">
+                    <img src="assets/imagem/965107395163626769.webp" alt="Nike Blazer Mid">
+                </div>
+                <div class="p-info">
+                    <h3>Nike Blazer Mid</h3>
+                    <p>Nike Classics</p>
+                    <div class="p-footer">
+                        <span class="price">R$ 569,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Nike%20Blazer%20Mid" class="buy-link" target="_blank">Comprar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Produto 6 -->
+            <div class="product-card" data-category="adidas">
+                <div class="p-img-box">
+                    <img src="assets/imagem/736620082828144653.jpg" alt="Adidas Ultra Boost">
+                </div>
+                <div class="p-info">
+                    <h3>Adidas Ultra Boost</h3>
+                    <p>Adidas Boost</p>
+                    <div class="p-footer">
+                        <span class="price">R$ 599,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Adidas%20Ultra%20Boost" class="buy-link" target="_blank">Comprar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Produto 7 -->
+            <div class="product-card" data-category="roupa">
+                <div class="p-img-box">
+                    <img src="assets/imagem/802837071109668609.jpg" alt="Hoodie Classic">
+                </div>
+                <div class="p-info">
+                    <h3>Hoodie Classic</h3>
+                    <p>Black Store</p>
+                    <div class="p-footer">
+                        <span class="price">R$ 159,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20a%20Hoodie%20Classic" class="buy-link" target="_blank">Comprar</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Produto 8 -->
+            <div class="product-card" data-category="nike">
+                <div class="p-img-box">
+                    <img src="assets/imagem/834643743479198294.jpg" alt="Air Force 1">
+                </div>
+                <div class="p-info">
+                    <h3>Air Force 1</h3>
+                    <p>Nike Icon</p>
+                    <div class="p-footer">
+                        <span class="price">R$ 479,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Air%20Force%201" class="buy-link" target="_blank">Comprar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LOCALIZAÇÃO -->
+    <section class="location-section" id="localizacao">
+        <div class="loc-info">
+            <div class="info-row">
+                <div class="info-label">Endereço</div>
+                <div class="info-value">
+                    Av. Capitão Luiz Brandão, 106<br>
+                    Vila Nery, São Carlos - SP
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Horário de Funcionamento</div>
+                <div class="info-value">
+                    Seg - Sex: 09h às 18h<br>
+                    Sábado: 09h às 13h<br>
+                    Domingo: Fechado
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Contato</div>
+                <div class="info-value">
+                    (16) 99182-1047
+                </div>
+            </div>
+            <a href="https://wa.me/5516991821047" class="btn-zap" target="_blank">Chamar no WhatsApp</a>
+        </div>
+        <div class="loc-map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.2343560651486!2d-47.89240612346949!3d-22.011949378865166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94b876c4d54ea79b%3A0xa28b8e61b2d7eb9f!2sAv.%20Capit%C3%A3o%20Luiz%20Brand%C3%A3o%2C%20106%20-%20Vila%20Nery%2C%20S%C3%A3o%20Carlos%20-%20SP%2C%2013568-450!5e0!3m2!1spt-BR!2sbr!4v1701234567890" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>BLACK STORE</h4>
+                <ul>
+                    <li>Fundada em 2020</li>
+                    <li>Streetwear Autêntico</li>
+                    <li>Qualidade Garantida</li>
+                    <li>Atendimento Premium</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Marcas</h4>
+                <ul>
+                    <li><a href="#colecao">Nike</a></li>
+                    <li><a href="#colecao">Adidas</a></li>
+                    <li><a href="#colecao">Roupas</a></li>
+                    <li><a href="#colecao">Bonés</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Sobre</h4>
+                <ul>
+                    <li><a href="#localizacao">Nossa Loja</a></li>
+                    <li><a href="#localizacao">Localização</a></li>
+                    <li><a href="tel:5516991821047">Contato</a></li>
+                    <li><a href="https://wa.me/5516991821047">WhatsApp</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Redes Sociais</h4>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">TikTok</a></li>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="https://wa.me/5516991821047">WhatsApp</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 BLACK STORE. Todos os direitos reservados. | São Carlos, SP</p>
+        </div>
+    </footer>
+
+    <!-- WHATSAPP FLOAT -->
+    <a href="https://wa.me/5516991821047" class="wpp-float" target="_blank" title="Clique para abrir WhatsApp">
+        <svg viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" fill="white"/>
+        </svg>
+    </a>
+
+    <script>
+        // CARROSSEL 
+        let currentSlideIndex = 0;
+
+        function changeCarouselSlide(n) {
+            showCarouselSlide(currentSlideIndex += n);
+        }
+
+        function currentCarouselSlide(n) {
+            showCarouselSlide(currentSlideIndex = n);
+        }
+
+        function showCarouselSlide(n) {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.dot');
+            
+            if (n >= slides.length) { currentSlideIndex = 0; }
+            if (n < 0) { currentSlideIndex = slides.length - 1; }
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slides[currentSlideIndex].classList.add('active');
+            dots[currentSlideIndex].classList.add('active');
+        }
+
+        // Auto carousel (desativado pois o carrossel foi removido)
+        // setInterval(() => {
+        //     changeCarouselSlide(1);
+        // }, 5000);
+
+
+        // Função de Filtro de Produtos
+        function filterProducts(category, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const cards = document.querySelectorAll('.product-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'flex';
+                    setTimeout(() => card.style.opacity = '1', 10);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Menu Mobile
+        document.querySelector('.menu-toggle').addEventListener('click', () => {
+            const nav = document.querySelector('.nav-links');
+            nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+            if (nav.style.display === 'flex') {
+                nav.style.flexDirection = 'column';
+                nav.style.position = 'absolute';
+                nav.style.top = '70px';
+                nav.style.left = '0';
+                nav.style.width = '100%';
+                nav.style.background = 'rgba(5, 5, 5, 0.95)';
+                nav.style.padding = '20px';
+                nav.style.borderBottom = '1px solid #333';
+                nav.style.gap = '15px';
+            }
+        });
+
+        // Smooth scroll para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
