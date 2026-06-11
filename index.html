@@ -3,786 +3,1180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BLACK STORE | São Carlos - Streetwear, Nike, Adidas</title>
-    <meta name="description" content="BLACK STORE - A seleção definitiva de streetwear em São Carlos. Nike, Adidas, bonés, tênis e roupas exclusivas.">
-    
+    <title>BLACK STORE | São Carlos — Streetwear, Nike, Adidas</title>
+    <meta name="description" content="BLACK STORE — A marca dos artistas. Streetwear premium em São Carlos. Nike, Adidas e muito mais.">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 
     <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
         :root {
-            --bg: #050505;
-            --bg-dark: #0a0a0a;
-            --card-bg: #111111;
-            --text: #ffffff;
-            --text-muted: #888888;
-            --border: #333333;
+            --black: #000000;
+            --black-soft: #0a0a0a;
+            --card: #111111;
+            --border: #1e1e1e;
+            --border-light: #2a2a2a;
+            --white: #ffffff;
+            --gray: #888888;
+            --gray-light: #cccccc;
+            --red: #e30000;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        html { scroll-behavior: smooth; }
+
         body {
-            background-color: var(--bg);
-            color: var(--text);
+            background: var(--black);
+            color: var(--white);
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+        body.intro-lock { overflow: hidden; height: 100vh; }
+
+        /* ===== INTRO 3D LOUCA ===== */
+        #intro {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            perspective: 1000px;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        #intro.done {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
         }
 
-        h1, h2, h3, h4 { font-family: 'Bebas Neue', sans-serif; text-transform: uppercase; letter-spacing: 1px; }
-        a { text-decoration: none; color: inherit; transition: 0.3s ease; }
+        /* grade 3D em movimento no fundo */
+        .intro-grid {
+            position: absolute;
+            inset: -50%;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+            background-size: 60px 60px;
+            transform: rotateX(70deg) translateZ(-100px);
+            transform-origin: center;
+            animation: gridMove 3s linear infinite;
+            opacity: 0.5;
+        }
+        @keyframes gridMove {
+            from { background-position: 0 0; }
+            to   { background-position: 0 60px; }
+        }
+
+        /* halo de luz vermelha pulsante */
+        .intro-glow {
+            position: absolute;
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(227,0,0,0.25) 0%, transparent 65%);
+            border-radius: 50%;
+            animation: glowPulse 2s ease-in-out infinite;
+            filter: blur(20px);
+        }
+        @keyframes glowPulse {
+            0%, 100% { transform: scale(0.85); opacity: 0.5; }
+            50%       { transform: scale(1.15); opacity: 1; }
+        }
+
+        /* palco 3D que gira */
+        .intro-stage {
+            position: relative;
+            transform-style: preserve-3d;
+            text-align: center;
+            animation: stageSpin 2.6s cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+        @keyframes stageSpin {
+            0%   { transform: rotateY(-90deg) rotateX(25deg) scale(0.3); opacity: 0; }
+            45%  { transform: rotateY(15deg) rotateX(-8deg) scale(1.08); opacity: 1; }
+            70%  { transform: rotateY(-6deg) rotateX(3deg) scale(0.98); }
+            100% { transform: rotateY(0deg) rotateX(0deg) scale(1); opacity: 1; }
+        }
+
+        .intro-word {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(60px, 16vw, 200px);
+            line-height: 0.85;
+            letter-spacing: 4px;
+            color: #fff;
+            transform-style: preserve-3d;
+        }
+        .intro-word .l1 { color: #fff; }
+        .intro-word .l2 {
+            color: transparent;
+            -webkit-text-stroke: 2px #fff;
+            text-stroke: 2px #fff;
+        }
+        /* cada letra cai/monta em 3D */
+        .intro-char {
+            display: inline-block;
+            transform-style: preserve-3d;
+            opacity: 0;
+            animation: charDrop 0.6s cubic-bezier(0.16,1,0.3,1) forwards;
+            text-shadow: 0 0 40px rgba(227,0,0,0.6);
+        }
+        @keyframes charDrop {
+            0%   { opacity: 0; transform: translateY(-120px) translateZ(200px) rotateX(90deg); }
+            100% { opacity: 1; transform: translateY(0) translateZ(0) rotateX(0); }
+        }
+
+        /* efeito glitch sobre a palavra */
+        .intro-stage.glitch { animation: stageSpin 2.6s cubic-bezier(0.16,1,0.3,1) forwards, glitchShake 0.18s steps(2) 2.3s 3; }
+        @keyframes glitchShake {
+            0% { transform: translate(0,0); }
+            25% { transform: translate(-4px, 2px) skewX(3deg); }
+            50% { transform: translate(4px, -2px) skewX(-3deg); }
+            75% { transform: translate(-2px, 1px); }
+            100% { transform: translate(0,0); }
+        }
+
+        .intro-tag {
+            margin-top: 30px;
+            font-size: clamp(10px, 2.5vw, 14px);
+            font-weight: 700;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: var(--gray-light);
+            opacity: 0;
+            animation: fadeIn 0.8s ease 2s forwards;
+        }
+
+        /* linha de scan vermelha */
+        .intro-scan {
+            position: absolute;
+            left: 0; width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(227,0,0,0.9), transparent);
+            box-shadow: 0 0 20px rgba(227,0,0,0.8);
+            animation: scanLine 2.2s ease-in-out infinite;
+        }
+        @keyframes scanLine {
+            0%   { top: 0%; opacity: 0; }
+            10%  { opacity: 1; }
+            90%  { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* barra de progresso fina embaixo */
+        .intro-bar {
+            position: absolute;
+            bottom: 0; left: 0;
+            height: 3px;
+            width: 0%;
+            background: var(--red);
+            box-shadow: 0 0 12px var(--red);
+            animation: introBar 2.6s ease forwards;
+        }
+        @keyframes introBar {
+            from { width: 0%; }
+            to   { width: 100%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .intro-stage, .intro-char, .intro-bar { animation-duration: 0.6s !important; }
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Bebas Neue', sans-serif;
+            text-transform: uppercase;
+            line-height: 0.92;
+            letter-spacing: 1px;
+        }
+
+        a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
         ul { list-style: none; }
-        button { cursor: pointer; transition: 0.3s ease; }
+        button { cursor: pointer; font-family: inherit; transition: all 0.3s ease; }
+        img { display: block; max-width: 100%; }
+
+        /* ===== SCROLL CUSTOM ===== */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--black); }
+        ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        @keyframes marqueeScroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+            50%       { box-shadow: 0 0 0 12px rgba(37, 211, 102, 0); }
+        }
+
+        @keyframes shimmer {
+            0%   { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* ===== NAVBAR ===== */
         nav {
             position: fixed;
             top: 0; left: 0; width: 100%;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            padding: 20px 5%;
-            background: rgba(5, 5, 5, 0.95);
-            backdrop-filter: blur(10px);
             z-index: 1000;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .logo { 
-            font-size: 28px; 
-            letter-spacing: 2px; 
-            font-weight: 700;
-        }
-        .logo span { color: var(--text-muted); }
-
-        .nav-links { 
-            display: flex; 
-            gap: 40px; 
-        }
-        .nav-links a { 
-            font-size: 12px; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            color: var(--text-muted);
-            position: relative;
-        }
-        .nav-links a:hover { 
-            color: var(--text);
-        }
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--text);
-            transition: width 0.3s ease;
-        }
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .btn-nav {
-            border: 1px solid var(--text);
-            padding: 10px 25px;
-            font-size: 12px;
-            text-transform: uppercase;
-            font-weight: 600;
-            background: transparent;
-            color: var(--text);
-        }
-        .btn-nav:hover { 
-            background: var(--text); 
-            color: var(--bg);
-        }
-
-        .menu-toggle { 
-            display: none; 
-            cursor: pointer; 
-            font-size: 24px;
-            color: var(--text);
-        }
-
-        /* ===== HERO SECTION ===== */
-        .hero {
-            height: 100vh;
-            width: 100%;
-            position: relative;
+            padding: 0 5%;
+            height: 72px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            text-align: center;
+            justify-content: space-between;
+            border-bottom: 1px solid transparent;
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(0, 0, 0, 0.96);
+            backdrop-filter: blur(20px);
+            border-bottom-color: var(--border);
+        }
+
+        .nav-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 26px;
+            letter-spacing: 3px;
+            color: var(--white);
+            line-height: 1;
+        }
+        .nav-logo span { color: var(--gray); }
+
+        .nav-center {
+            display: flex;
+            gap: 40px;
+        }
+        .nav-center a {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gray);
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .nav-center a::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 1px;
+            background: var(--white);
+            transition: width 0.3s ease;
+        }
+        .nav-center a:hover { color: var(--white); }
+        .nav-center a:hover::after { width: 100%; }
+
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--white);
+            padding: 10px 22px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--white);
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        .nav-cta:hover {
+            background: var(--white);
+            color: var(--black);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 22px;
+        }
+
+        /* ===== MOBILE NAV ===== */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 72px; left: 0; width: 100%;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 30px 5%;
+            z-index: 999;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav a {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gray);
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .mobile-nav a:hover { color: var(--white); }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
             overflow: hidden;
-            margin-top: 70px;
-            background: var(--bg);
+            padding-bottom: 80px;
         }
 
         .hero-bg {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('assets/imagem/ChatGPT Image 9 de jun. de 2026, 23_01_38.png');
-            background-size: cover;
-            background-position: center;
+            inset: 0;
+            background-image: url('assets/imagem/hero.png');
+            background-size: contain;
             background-repeat: no-repeat;
-            z-index: 0;
-            transform: translateZ(0);
+            background-position: center center;
+            background-color: #000;
+            transform: scale(1.02);
+            transition: transform 0.1s linear;
         }
 
-        .carousel-container {
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .carousel-image-container {
-            pointer-events: auto;
-        }
-
-
-        .hero-overlay {
+        .hero-gradient {
             position: absolute;
-            top: 0; left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: rgba(0, 0, 0, 0.2);
-            z-index: 2;
-            pointer-events: none;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.5) 0%,
+                rgba(0,0,0,0) 25%,
+                rgba(0,0,0,0) 65%,
+                rgba(0,0,0,0.85) 90%,
+                rgba(0,0,0,1) 100%
+            );
+            z-index: 1;
         }
 
         .hero-content {
             position: relative;
-            z-index: 10;
-            max-width: 900px;
-            padding: 40px 20px;
-            animation: fadeInUp 1s ease-out;
+            z-index: 2;
+            text-align: center;
+            width: 100%;
+            padding: 0 5%;
+            animation: fadeUp 1s ease 0.3s both;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .hero-tag {
-            display: inline-block;
-            border: 1px solid var(--text-muted);
-            padding: 8px 20px;
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 10px 24px;
             font-size: 11px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 25px;
-            color: var(--text-muted);
+            letter-spacing: 3px;
+            color: var(--gray-light);
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+        }
+        .hero-badge::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: var(--red);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
         }
 
         .hero-title {
-            font-size: clamp(50px, 12vw, 140px);
-            line-height: 0.9;
-            margin-bottom: 25px;
-            letter-spacing: -1px;
-            font-weight: 700;
+            font-size: clamp(70px, 14vw, 160px);
+            letter-spacing: -2px;
+            line-height: 0.88;
+            margin-bottom: 20px;
+            text-shadow: 0 0 80px rgba(0,0,0,0.8);
         }
 
-        .hero-description {
-            color: #ccc; 
-            margin-bottom: 35px; 
-            max-width: 600px; 
-            margin-left: auto; 
-            margin-right: auto;
-            font-size: 16px;
-            line-height: 1.8;
+        .hero-sub {
+            font-size: clamp(13px, 2vw, 18px);
+            font-weight: 300;
+            color: var(--gray-light);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
         }
 
-        .hero-btn {
-            display: inline-block;
-            background: var(--text);
-            color: var(--bg);
-            padding: 16px 45px;
-            font-size: 13px;
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 40px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            letter-spacing: 1px;
+            line-height: 1;
+            display: block;
+        }
+        .stat-label {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gray);
+            display: block;
+            margin-top: 4px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--white);
+            color: var(--black);
+            padding: 16px 36px;
+            font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             transition: all 0.3s ease;
         }
-        .hero-btn:hover { 
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(255,255,255,0.2);
+        .btn-primary:hover {
+            background: var(--gray-light);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(255,255,255,0.15);
         }
 
-        /* CARROSSEL */
-        .carousel-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            display: flex;
+        .btn-ghost {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-        }
-
-        .carousel-slide {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 40px;
-            opacity: 0;
-            transition: opacity 0.8s ease-in-out;
-            z-index: 1;
-        }
-
-        .carousel-slide.active {
-            opacity: 1;
-        }
-
-        /* CARROSSEL IMAGEM ESTILO CARD */
-        .carousel-image-container {
-            width: 100%;
-            max-width: 600px;
-            aspect-ratio: 3/4;
-            border: 3px solid var(--text);
-            border-radius: 12px;
-            overflow: hidden;
-            background: var(--card-bg);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
-            position: relative;
-            z-index: 2;
-        }
-
-        .carousel-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            display: block;
-            border-radius: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .carousel-slide {
-                padding: 40px 20px;
-            }
-
-            .carousel-image-container {
-                max-width: 400px;
-            }
-        }
-
-        .carousel-controls {
-            position: absolute;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 20px;
-            z-index: 5;
-        }
-
-        .carousel-btn {
-            width: 50px;
-            height: 50px;
-            border: 2px solid var(--text);
+            gap: 10px;
             background: transparent;
-            color: var(--text);
-            font-size: 20px;
-            cursor: pointer;
+            color: var(--white);
+            padding: 16px 36px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 1px solid rgba(255,255,255,0.3);
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        }
+        .btn-ghost:hover {
+            border-color: var(--white);
+            background: rgba(255,255,255,0.05);
         }
 
-        .carousel-btn:hover {
-            background: var(--text);
-            color: var(--bg);
-        }
-
-        .carousel-dots {
+        .hero-scroll {
             position: absolute;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
+            z-index: 2;
             display: flex;
-            gap: 12px;
-            z-index: 5;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: fadeIn 2s ease 1.5s both;
         }
-
-        .dot {
-            width: 12px;
-            height: 12px;
-            border: 2px solid var(--text);
-            border-radius: 50%;
-            background: transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .dot.active {
-            background: var(--text);
-            width: 30px;
-            border-radius: 6px;
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, transparent, var(--gray));
+            animation: fadeUp 1s ease infinite alternate;
         }
 
         /* ===== MARQUEE ===== */
-        .marquee {
-            background: var(--text);
-            color: var(--bg);
-            padding: 15px 0;
+        .marquee-wrap {
+            background: var(--white);
             overflow: hidden;
-            white-space: nowrap;
+            padding: 14px 0;
             border-bottom: 1px solid var(--border);
         }
-        .marquee-content {
-            display: inline-block;
-            animation: scroll 25s linear infinite;
-            font-family: 'Bebas Neue';
-            font-size: 22px;
-            letter-spacing: 2px;
-            font-weight: 700;
+        .marquee-track {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: marqueeScroll 20s linear infinite;
         }
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+        .marquee-track:hover { animation-play-state: paused; }
+        .marquee-item {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 20px;
+            letter-spacing: 3px;
+            color: var(--black);
+            padding: 0 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 30px;
+        }
+        .marquee-dot {
+            width: 5px; height: 5px;
+            background: var(--black);
+            border-radius: 50%;
+            opacity: 0.4;
+            flex-shrink: 0;
         }
 
-        /* ===== SEÇÕES ===== */
-        .section { 
-            padding: 100px 5%; 
+        /* ===== SECTION HEADING ===== */
+        .section {
+            padding: 100px 5%;
             border-top: 1px solid var(--border);
         }
-        
+
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
             margin-bottom: 60px;
-            gap: 40px;
+            gap: 30px;
             flex-wrap: wrap;
         }
 
-        .section-title { 
-            font-size: 60px; 
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gray);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-label::before {
+            content: '';
+            width: 20px;
+            height: 1px;
+            background: var(--gray);
+        }
+
+        .section-title {
+            font-size: clamp(50px, 7vw, 90px);
             line-height: 0.9;
-            margin-bottom: 10px;
         }
 
-        .filters { 
-            display: flex; 
-            gap: 12px; 
+        /* ===== FILTERS ===== */
+        .filters {
+            display: flex;
+            gap: 10px;
             flex-wrap: wrap;
+            align-items: center;
         }
         .filter-btn {
             background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            padding: 10px 18px;
-            text-transform: uppercase;
+            border: 1px solid var(--border-light);
+            color: var(--gray);
+            padding: 10px 20px;
             font-size: 11px;
-            transition: 0.3s ease;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.25s ease;
         }
-        .filter-btn.active { 
-            border-color: var(--text); 
-            color: var(--text);
-            background: var(--text);
-            color: var(--bg);
+        .filter-btn:hover {
+            border-color: var(--white);
+            color: var(--white);
         }
-        .filter-btn:hover { 
-            border-color: var(--text);
-            color: var(--text);
+        .filter-btn.active {
+            background: var(--white);
+            border-color: var(--white);
+            color: var(--black);
         }
 
-        /* ===== PRODUTOS ===== */
+        /* ===== PRODUCTS GRID ===== */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 1px;
             background: var(--border);
-            border: 1px solid var(--border);
+        }
+
+        @media (max-width: 1200px) {
+            .products-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 900px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 500px) {
+            .products-grid { grid-template-columns: 1fr; }
         }
 
         .product-card {
-            background: var(--bg);
-            padding: 20px;
-            position: relative;
-            transition: all 0.3s ease;
+            background: var(--black-soft);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            min-height: 420px;
-        }
-
-        .product-card:hover { 
-            background: var(--card-bg);
-            z-index: 10;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.8);
-        }
-
-        .p-img-box {
-            width: 100%;
-            aspect-ratio: 3/4;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-            margin-bottom: 20px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: relative;
+            overflow: hidden;
+            transition: background 0.3s ease;
+            cursor: pointer;
         }
-        
-        .p-img-box::before {
-            content: '📷';
-            font-size: 50px;
-            opacity: 0.15;
-            position: absolute;
-            z-index: 1;
+        .product-card:hover { background: var(--card); }
+
+        .p-img-wrap {
+            position: relative;
+            aspect-ratio: 3/4;
+            overflow: hidden;
+            background: #111;
         }
-        
-        .p-img-box img {
-            width: 100%; 
-            height: 100%;
+        .p-img-wrap img {
+            width: 100%; height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
-            filter: grayscale(15%);
+            transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: grayscale(10%);
         }
-        
-        .product-card:hover .p-img-box img { 
-            transform: scale(1.08); 
+        .product-card:hover .p-img-wrap img {
+            transform: scale(1.07);
             filter: grayscale(0%);
         }
 
-        .p-info h3 { 
-            font-size: 22px; 
-            margin-bottom: 6px;
-            font-weight: 700;
-        }
-        .p-info p { 
-            color: var(--text-muted); 
-            font-size: 13px; 
-            margin-bottom: 16px;
-        }
-        
-        .p-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid var(--border);
-            padding-top: 15px;
-            margin-top: auto;
-        }
-        .price { 
-            font-size: 18px; 
-            font-weight: 700;
-        }
-        .buy-link { 
-            font-size: 11px; 
-            text-transform: uppercase; 
-            border-bottom: 1px solid var(--text); 
-            padding-bottom: 2px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        .buy-link:hover {
-            opacity: 0.8;
+        .p-badge {
+            position: absolute;
+            top: 15px; left: 15px;
+            background: var(--white);
+            color: var(--black);
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 4px 10px;
+            z-index: 2;
         }
 
-        /* ===== LOCALIZAÇÃO ===== */
+        .p-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 3;
+        }
+        .product-card:hover .p-overlay { opacity: 1; }
+        .p-overlay-btn {
+            background: var(--white);
+            color: var(--black);
+            border: none;
+            padding: 14px 30px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transform: translateY(10px);
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover .p-overlay-btn { transform: translateY(0); }
+
+        .p-info {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .p-brand {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gray);
+            margin-bottom: 6px;
+        }
+        .p-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        .p-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+        }
+        .p-price {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        .p-link {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s ease;
+        }
+        .p-link:hover { color: var(--white); }
+        .p-link::after {
+            content: '→';
+            transition: transform 0.3s ease;
+        }
+        .p-link:hover::after { transform: translateX(4px); }
+
+        /* ===== BRANDS SECTION ===== */
+        .brands-section {
+            padding: 80px 5%;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+        .brands-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gray);
+            margin-bottom: 40px;
+        }
+        .brands-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+        .brand-item {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: 3px;
+            color: var(--border-light);
+            transition: color 0.3s ease;
+        }
+        .brand-item:hover { color: var(--white); }
+
+        /* ===== STATEMENT SECTION ===== */
+        .statement-section {
+            padding: 120px 5%;
+            border-top: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        .statement-left {}
+        .statement-tag {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gray);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .statement-tag::before {
+            content: '';
+            width: 20px;
+            height: 1px;
+            background: var(--gray);
+        }
+        .statement-title {
+            font-size: clamp(50px, 6vw, 80px);
+            line-height: 0.9;
+            margin-bottom: 30px;
+        }
+        .statement-text {
+            font-size: 16px;
+            font-weight: 300;
+            color: var(--gray-light);
+            line-height: 1.9;
+            max-width: 420px;
+        }
+        .statement-right {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: var(--border);
+        }
+        .stat-box {
+            background: var(--black-soft);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .stat-box-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 60px;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .stat-box-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gray);
+        }
+
+        /* ===== LOCATION ===== */
         .location-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
             border-top: 1px solid var(--border);
+            min-height: 550px;
         }
-        
         .loc-info {
             padding: 80px 5%;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background: var(--card-bg);
+            background: var(--black-soft);
         }
-        
-        .loc-map {
-            width: 100%;
-            min-height: 500px;
+        .loc-title {
+            font-size: clamp(40px, 5vw, 60px);
+            margin-bottom: 50px;
         }
-        
-        .loc-map iframe {
-            width: 100%;
-            height: 100%;
-            min-height: 500px;
-            border: none;
+        .info-block {
+            margin-bottom: 32px;
         }
-        
-        .info-row { 
-            margin-bottom: 40px;
-        }
-        .info-label { 
-            font-size: 11px; 
-            text-transform: uppercase; 
-            color: var(--text-muted); 
-            letter-spacing: 1.5px; 
+        .info-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--gray);
             margin-bottom: 8px;
-            font-weight: 600;
         }
-        .info-value { 
-            font-size: 18px; 
+        .info-value {
+            font-size: 16px;
             font-weight: 300;
+            color: var(--gray-light);
             line-height: 1.8;
         }
-
-        .btn-zap {
-            border: 1px solid var(--text);
-            padding: 14px 30px;
-            font-size: 13px;
-            text-transform: uppercase;
-            font-weight: 600;
-            background: transparent;
-            color: var(--text);
-            display: inline-block;
-            margin-top: 20px;
-            letter-spacing: 1px;
-        }
-        .btn-zap:hover {
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
             background: #25D366;
-            border-color: #25D366;
+            color: var(--white);
+            padding: 16px 28px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            width: fit-content;
+        }
+        .btn-whatsapp:hover {
+            background: #1ebe5a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37,211,102,0.3);
+        }
+        .loc-map {
+            background: var(--card);
+        }
+        .loc-map iframe {
+            width: 100%; height: 100%;
+            min-height: 500px;
+            border: none;
+            filter: grayscale(100%) invert(92%) contrast(85%);
+            display: block;
         }
 
         /* ===== FOOTER ===== */
         footer {
-            padding: 50px 5%;
+            background: var(--black-soft);
             border-top: 1px solid var(--border);
-            background: var(--card-bg);
+            padding: 80px 5% 40px;
         }
-
-        .footer-content {
+        .footer-top {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 50px;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+            padding-bottom: 60px;
+            border-bottom: 1px solid var(--border);
         }
-
-        .footer-section h4 {
+        .footer-brand .footer-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 40px;
+            letter-spacing: 3px;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+        .footer-brand .footer-logo span { color: var(--gray); }
+        .footer-brand p {
             font-size: 14px;
-            margin-bottom: 20px;
+            font-weight: 300;
+            color: var(--gray);
+            line-height: 1.8;
+            max-width: 260px;
+            margin-bottom: 24px;
+        }
+        .footer-socials {
+            display: flex;
+            gap: 12px;
+        }
+        .social-btn {
+            width: 36px; height: 36px;
+            border: 1px solid var(--border-light);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
+            color: var(--gray);
+            transition: all 0.3s ease;
+        }
+        .social-btn:hover {
+            border-color: var(--white);
+            color: var(--white);
+            background: rgba(255,255,255,0.05);
+        }
+        .footer-col h5 {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            color: var(--white);
+            margin-bottom: 24px;
         }
-
-        .footer-section ul li {
+        .footer-col ul li {
             margin-bottom: 12px;
+        }
+        .footer-col ul li a {
             font-size: 14px;
-            color: var(--text-muted);
+            font-weight: 300;
+            color: var(--gray);
+            transition: color 0.3s ease;
         }
-
-        .footer-section a:hover {
-            color: var(--text);
-        }
-
+        .footer-col ul li a:hover { color: var(--white); }
         .footer-bottom {
-            border-top: 1px solid var(--border);
-            padding-top: 30px;
-            text-align: center;
-            font-size: 13px;
-            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .footer-bottom p {
+            font-size: 12px;
+            color: var(--gray);
         }
 
         /* ===== WHATSAPP FLOAT ===== */
         .wpp-float {
             position: fixed;
-            bottom: 30px; 
-            right: 30px;
+            bottom: 28px; right: 28px;
+            width: 58px; height: 58px;
             background: #25D366;
-            width: 60px; 
-            height: 60px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
-            box-shadow: 0 4px 25px rgba(37,211,102,0.4);
-            animation: pulse 2s infinite;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 990;
+            box-shadow: 0 4px 20px rgba(37,211,102,0.4);
+            animation: pulse 2.5s infinite;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        @keyframes pulse {
-            0%, 100% { box-shadow: 0 4px 25px rgba(37,211,102,0.4); }
-            50% { box-shadow: 0 4px 25px rgba(37,211,102,0.8); }
-        }
-
         .wpp-float:hover {
             transform: scale(1.1);
             animation: none;
+            box-shadow: 0 8px 40px rgba(37,211,102,0.5);
         }
+        .wpp-float svg { width: 28px; height: 28px; fill: white; }
 
-        .wpp-float svg { 
-            width: 32px; 
-            height: 32px; 
-            fill: white;
-        }
-
-        /* ===== RESPONSIVO ===== */
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
-            .section { padding: 80px 5%; }
-            .section-header { margin-bottom: 40px; }
-            .section-title { font-size: 50px; }
+            .statement-section { grid-template-columns: 1fr; gap: 60px; }
+            .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
         }
 
         @media (max-width: 768px) {
-            nav {
-                padding: 15px 5%;
-            }
+            nav { height: 60px; padding: 0 5%; }
+            .nav-center { display: none; }
+            .nav-cta { display: none; }
+            .menu-toggle { display: block; }
 
-            .nav-links { 
-                display: none; 
+            .hero { min-height: 100svh; padding-bottom: 50px; }
+            .hero-bg {
+                background-image: url('assets/imagem/hero-mobile.png');
+                background-size: cover;
+                background-position: center top;
             }
-            .menu-toggle { 
-                display: block;
+            .hero-gradient {
+                background: linear-gradient(
+                    to bottom,
+                    rgba(0,0,0,0.35) 0%,
+                    rgba(0,0,0,0) 55%,
+                    rgba(0,0,0,0.85) 88%,
+                    rgba(0,0,0,1) 100%
+                );
             }
+            .hero-stats { gap: 30px; }
+            .hero-actions { flex-direction: column; align-items: center; gap: 12px; }
+            .btn-primary, .btn-ghost { width: 280px; justify-content: center; }
+            .hero-content { padding-bottom: 8px; }
 
-            .hero {
-                height: 80vh;
-                margin-top: 60px;
-            }
+            .section { padding: 70px 5%; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 20px; }
 
-            .hero-title { 
-                font-size: 60px;
-                margin-bottom: 15px;
-            }
+            .location-section { grid-template-columns: 1fr; }
+            .loc-map { order: -1; }
+            .loc-map iframe { min-height: 300px; }
 
-            .hero-description {
-                font-size: 14px;
-            }
+            .footer-top { grid-template-columns: 1fr; gap: 40px; }
+            .footer-bottom { flex-direction: column; text-align: center; }
 
-            .section-header { 
-                flex-direction: column; 
-                align-items: flex-start; 
-                gap: 20px;
-            }
+            .statement-right { grid-template-columns: 1fr 1fr; }
 
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-
-            .location-section { 
-                grid-template-columns: 1fr;
-            }
-
-            .loc-info {
-                order: 2;
-            }
-
-            .loc-map {
-                order: 1;
-                min-height: 400px;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
-            .wpp-float {
-                width: 50px;
-                height: 50px;
-                bottom: 20px;
-                right: 20px;
-            }
+            .brands-row { gap: 30px; }
         }
 
         @media (max-width: 480px) {
-            .logo {
-                font-size: 20px;
-            }
-
-            .hero-title { 
-                font-size: 45px;
-            }
-
-            .section-title {
-                font-size: 40px;
-            }
-
-            .btn-nav, .hero-btn {
-                padding: 10px 20px;
-                font-size: 11px;
-            }
-
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .marquee-content {
-                font-size: 16px;
-            }
+            .hero-title { font-size: 66px; }
+            .hero-sub { font-size: 11px; letter-spacing: 3px; }
+            .hero-stats { display: flex; gap: 24px; }
+            .stat-num { font-size: 26px; }
+            .stat-label { font-size: 8px; letter-spacing: 1.5px; }
+            .section-title { font-size: 44px; }
+            .statement-right { grid-template-columns: 1fr 1fr; }
+            .stat-box { padding: 28px 16px; }
+            .stat-box-num { font-size: 44px; }
         }
     </style>
 </head>
-<body>
+<body class="intro-lock">
+
+    <!-- INTRO 3D -->
+    <div id="intro">
+        <div class="intro-grid"></div>
+        <div class="intro-glow"></div>
+        <div class="intro-scan"></div>
+        <div class="intro-stage glitch" id="introStage">
+            <div class="intro-word">
+                <span class="l1" id="word1"></span><br>
+                <span class="l2" id="word2"></span>
+            </div>
+            <p class="intro-tag">A Marca dos Artistas</p>
+        </div>
+        <div class="intro-bar"></div>
+    </div>
 
     <!-- NAVBAR -->
-    <nav>
-        <div class="logo">BLACK <span>STORE</span></div>
-        <ul class="nav-links">
-            <li><a href="#home">Início</a></li>
-            <li><a href="#colecao">Coleção</a></li>
-            <li><a href="#localizacao">Localização</a></li>
-        </ul>
-        <a href="https://wa.me/5516991821047" class="btn-nav" target="_blank">Comprar</a>
-        <div class="menu-toggle">☰</div>
+    <nav id="navbar">
+        <a href="#home" class="nav-logo">BLACK <span>STORE</span></a>
+        <div class="nav-center">
+            <a href="#home">Início</a>
+            <a href="#colecao">Coleção</a>
+            <a href="#sobre">Sobre</a>
+            <a href="#localizacao">Loja</a>
+        </div>
+        <a href="https://wa.me/5516991821047" class="nav-cta" target="_blank">
+            Comprar Agora
+        </a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+            <span id="menuIcon">☰</span>
+        </button>
     </nav>
 
-    <!-- HERO SECTION COM CARROSSEL -->
+    <!-- MOBILE NAV -->
+    <div class="mobile-nav" id="mobileNav">
+        <a href="#home" onclick="closeMobileNav()">Início</a>
+        <a href="#colecao" onclick="closeMobileNav()">Coleção</a>
+        <a href="#sobre" onclick="closeMobileNav()">Sobre</a>
+        <a href="#localizacao" onclick="closeMobileNav()">Nossa Loja</a>
+        <a href="https://wa.me/5516991821047" target="_blank" onclick="closeMobileNav()">WhatsApp</a>
+    </div>
+
+    <!-- HERO -->
     <section class="hero" id="home">
-        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="hero-bg" id="heroBg"></div>
+        <div class="hero-gradient"></div>
 
-        <!-- CARROSSEL (removido) -->
-        <!--
-        <div class="carousel-container">
-            <div class="carousel-slide active">
-
-                <div class="carousel-image-container">
-<img src="assets/imagem/ChatGPT Image 9 de jun. de 2026, 23_01_38.png" alt="Carrossel 1">
-                </div>
-            </div>
-            <div class="carousel-slide">
-                <div class="carousel-image-container">
-<img src="assets/imagem/ChatGPT Image 9 de jun. de 2026, 23_01_38.png" alt="Carrossel 2">
-                </div>
-            </div>
-        </div>
-        -->
-        <div class="hero-overlay"></div>
         <div class="hero-content">
-            
-          
+            <div class="hero-actions">
+                <a href="#colecao" class="btn-primary">Ver Coleção</a>
+                <a href="https://wa.me/5516991821047" class="btn-ghost" target="_blank">Falar no WhatsApp</a>
+            </div>
         </div>
-        <div class="carousel-controls">
-            <button class="carousel-btn prev" onclick="changeCarouselSlide(-1)">❮</button>
-            <button class="carousel-btn next" onclick="changeCarouselSlide(1)">❯</button>
-        </div>
-        <div class="carousel-dots">
-            <span class="dot active" onclick="currentCarouselSlide(0)"></span>
-            <span class="dot" onclick="currentCarouselSlide(1)"></span>
+
+        <div class="hero-scroll">
+            <div class="scroll-line"></div>
+            Scroll
         </div>
     </section>
 
     <!-- MARQUEE -->
-    <div class="marquee">
-        <div class="marquee-content">
-            ★ NIKE ★ ADIDAS ★ STREETWEAR ★ BONÉS ★ TÊNIS ★ BLACK STORE ★ NIKE ★ ADIDAS ★ STREETWEAR ★ BONÉS ★ TÊNIS ★ BLACK STORE ★
+    <div class="marquee-wrap">
+        <div class="marquee-track">
+            <div class="marquee-item">NIKE<span class="marquee-dot"></span></div>
+            <div class="marquee-item">ADIDAS<span class="marquee-dot"></span></div>
+            <div class="marquee-item">STREETWEAR<span class="marquee-dot"></span></div>
+            <div class="marquee-item">SÃO CARLOS<span class="marquee-dot"></span></div>
+            <div class="marquee-item">TÊNIS<span class="marquee-dot"></span></div>
+            <div class="marquee-item">BLACK STORE<span class="marquee-dot"></span></div>
+            <div class="marquee-item">A MARCA DOS ARTISTAS<span class="marquee-dot"></span></div>
+            <div class="marquee-item">OAKLEY<span class="marquee-dot"></span></div>
+            <div class="marquee-item">NIKE<span class="marquee-dot"></span></div>
+            <div class="marquee-item">ADIDAS<span class="marquee-dot"></span></div>
+            <div class="marquee-item">STREETWEAR<span class="marquee-dot"></span></div>
+            <div class="marquee-item">SÃO CARLOS<span class="marquee-dot"></span></div>
+            <div class="marquee-item">TÊNIS<span class="marquee-dot"></span></div>
+            <div class="marquee-item">BLACK STORE<span class="marquee-dot"></span></div>
+            <div class="marquee-item">A MARCA DOS ARTISTAS<span class="marquee-dot"></span></div>
+            <div class="marquee-item">OAKLEY<span class="marquee-dot"></span></div>
+        </div>
+    </div>
+
+    <!-- BRANDS -->
+    <div class="brands-section reveal">
+        <p class="brands-label">Marcas Disponíveis</p>
+        <div class="brands-row">
+            <span class="brand-item">Nike</span>
+            <span class="brand-item">Adidas</span>
+            <span class="brand-item">Oakley</span>
+            <span class="brand-item">Jordan</span>
+            <span class="brand-item">New Era</span>
+            <span class="brand-item">Puma</span>
         </div>
     </div>
 
     <!-- COLEÇÃO -->
     <section class="section" id="colecao">
-        <div class="section-header">
+        <div class="section-header reveal">
             <div>
+                <p class="section-label">Nova Coleção</p>
                 <h2 class="section-title">DROP<br>ATUAL</h2>
             </div>
             <div class="filters">
@@ -793,283 +1187,422 @@
             </div>
         </div>
 
-        <div class="products-grid">
-            <!-- Produto 1 -->
-            <div class="product-card" data-category="nike">
-                <div class="p-img-box">
-                    <img src="assets/imagem/666392076154235454.webp" alt="Air Max Red">
+        <div class="products-grid" id="productsGrid">
+
+            <div class="product-card reveal" data-category="nike">
+                <div class="p-img-wrap">
+                    <span class="p-badge">Nike</span>
+                    <img src="assets/imagem/666392076154235454.webp" alt="Air Max Red" loading="lazy">
+                    <div class="p-overlay">
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Air%20Max%20Red" target="_blank">
+                            <button class="p-overlay-btn">Pedir via WhatsApp</button>
+                        </a>
+                    </div>
                 </div>
                 <div class="p-info">
-                    <h3>Air Max Red</h3>
-                    <p>Nike Sportswear</p>
+                    <div>
+                        <p class="p-brand">Nike Sportswear</p>
+                        <h3 class="p-name">Air Max Red</h3>
+                    </div>
                     <div class="p-footer">
-                        <span class="price">R$ 499,90</span>
-                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Air%20Max%20Red" class="buy-link" target="_blank">Comprar</a>
+                        <span class="p-price">R$ 499,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Air%20Max%20Red" class="p-link" target="_blank">Comprar</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Produto 2 -->
-            <div class="product-card" data-category="roupa">
-                <div class="p-img-box">
-                    <img src="assets/imagem/736620082828144653.jpg" alt="Oversized Tee">
+            <div class="product-card reveal" data-category="roupa" style="transition-delay:0.1s">
+                <div class="p-img-wrap">
+                    <span class="p-badge">Drop</span>
+                    <img src="assets/imagem/736620082828144653.jpg" alt="Adidas Track" loading="lazy">
+                    <div class="p-overlay">
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Track%20Jacket%20Adidas" target="_blank">
+                            <button class="p-overlay-btn">Pedir via WhatsApp</button>
+                        </a>
+                    </div>
                 </div>
                 <div class="p-info">
-                    <h3>Oversized Tee</h3>
-                    <p>Black Store Basic</p>
+                    <div>
+                        <p class="p-brand">Adidas Originals</p>
+                        <h3 class="p-name">Track Jacket</h3>
+                    </div>
                     <div class="p-footer">
-                        <span class="price">R$ 89,90</span>
-                        <a href="https://wa.me/5516991821047?text=Quero%20a%20Camiseta%20Oversized" class="buy-link" target="_blank">Comprar</a>
+                        <span class="p-price">R$ 349,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Track%20Jacket%20Adidas" class="p-link" target="_blank">Comprar</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Produto 3 -->
-            <div class="product-card" data-category="adidas">
-                <div class="p-img-box">
-                    <img src="assets/imagem/802837071109668609.jpg" alt="Windbreaker">
+            <div class="product-card reveal" data-category="nike" style="transition-delay:0.2s">
+                <div class="p-img-wrap">
+                    <span class="p-badge">Novo</span>
+                    <img src="assets/imagem/802837071109668609.jpg" alt="Air Max Plus TN" loading="lazy">
+                    <div class="p-overlay">
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Air%20Max%20Plus%20TN" target="_blank">
+                            <button class="p-overlay-btn">Pedir via WhatsApp</button>
+                        </a>
+                    </div>
                 </div>
                 <div class="p-info">
-                    <h3>Windbreaker</h3>
-                    <p>Adidas Originals</p>
+                    <div>
+                        <p class="p-brand">Nike Air</p>
+                        <h3 class="p-name">Air Max Plus TN</h3>
+                    </div>
                     <div class="p-footer">
-                        <span class="price">R$ 349,90</span>
-                        <a href="https://wa.me/5516991821047?text=Quero%20a%20Jaqueta%20Adidas" class="buy-link" target="_blank">Comprar</a>
+                        <span class="p-price">R$ 589,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Air%20Max%20Plus%20TN" class="p-link" target="_blank">Comprar</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Produto 4 -->
-            <div class="product-card" data-category="roupa">
-                <div class="p-img-box">
-                    <img src="assets/imagem/834643743479198294.jpg" alt="Cargo Shorts">
+            <div class="product-card reveal" data-category="roupa" style="transition-delay:0.3s">
+                <div class="p-img-wrap">
+                    <span class="p-badge">Kit</span>
+                    <img src="assets/imagem/834643743479198294.jpg" alt="Kit Napoli" loading="lazy">
+                    <div class="p-overlay">
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Kit%20Napoli" target="_blank">
+                            <button class="p-overlay-btn">Pedir via WhatsApp</button>
+                        </a>
+                    </div>
                 </div>
                 <div class="p-info">
-                    <h3>Cargo Shorts</h3>
-                    <p>Urban Style</p>
+                    <div>
+                        <p class="p-brand">EA7 — Napoli</p>
+                        <h3 class="p-name">Kit Camisa + Tênis</h3>
+                    </div>
                     <div class="p-footer">
-                        <span class="price">R$ 129,90</span>
-                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Shorts%20Cargo" class="buy-link" target="_blank">Comprar</a>
+                        <span class="p-price">R$ 699,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Kit%20Napoli" class="p-link" target="_blank">Comprar</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Produto 5 -->
-            <div class="product-card" data-category="nike">
-                <div class="p-img-box">
-                    <img src="assets/imagem/965107395163626769.webp" alt="Nike Blazer Mid">
+            <div class="product-card reveal" data-category="nike" style="transition-delay:0.1s">
+                <div class="p-img-wrap">
+                    <span class="p-badge">Nike</span>
+                    <img src="assets/imagem/965107395163626769.webp" alt="Nike Blazer Mid" loading="lazy">
+                    <div class="p-overlay">
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Nike%20Blazer%20Mid" target="_blank">
+                            <button class="p-overlay-btn">Pedir via WhatsApp</button>
+                        </a>
+                    </div>
                 </div>
                 <div class="p-info">
-                    <h3>Nike Blazer Mid</h3>
-                    <p>Nike Classics</p>
+                    <div>
+                        <p class="p-brand">Nike Classics</p>
+                        <h3 class="p-name">Nike Blazer Mid</h3>
+                    </div>
                     <div class="p-footer">
-                        <span class="price">R$ 569,90</span>
-                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Nike%20Blazer%20Mid" class="buy-link" target="_blank">Comprar</a>
+                        <span class="p-price">R$ 569,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Nike%20Blazer%20Mid" class="p-link" target="_blank">Comprar</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Produto 6 -->
-            <div class="product-card" data-category="adidas">
-                <div class="p-img-box">
-                    <img src="assets/imagem/736620082828144653.jpg" alt="Adidas Ultra Boost">
+            <div class="product-card reveal" data-category="adidas" style="transition-delay:0.2s">
+                <div class="p-img-wrap">
+                    <span class="p-badge">Adidas</span>
+                    <img src="assets/imagem/736620082828144653.jpg" alt="Adidas Track Suit" loading="lazy">
+                    <div class="p-overlay">
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Track%20Suit%20Adidas" target="_blank">
+                            <button class="p-overlay-btn">Pedir via WhatsApp</button>
+                        </a>
+                    </div>
                 </div>
                 <div class="p-info">
-                    <h3>Adidas Ultra Boost</h3>
-                    <p>Adidas Boost</p>
+                    <div>
+                        <p class="p-brand">Adidas Performance</p>
+                        <h3 class="p-name">Track Suit Completo</h3>
+                    </div>
                     <div class="p-footer">
-                        <span class="price">R$ 599,90</span>
-                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Adidas%20Ultra%20Boost" class="buy-link" target="_blank">Comprar</a>
+                        <span class="p-price">R$ 449,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Track%20Suit%20Adidas" class="p-link" target="_blank">Comprar</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Produto 7 -->
-            <div class="product-card" data-category="roupa">
-                <div class="p-img-box">
-                    <img src="assets/imagem/802837071109668609.jpg" alt="Hoodie Classic">
+            <div class="product-card reveal" data-category="roupa" style="transition-delay:0.3s">
+                <div class="p-img-wrap">
+                    <span class="p-badge">Disponível</span>
+                    <img src="assets/imagem/802837071109668609.jpg" alt="Shorts + Tee" loading="lazy">
+                    <div class="p-overlay">
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Shorts%20+%20Tee%20Preto" target="_blank">
+                            <button class="p-overlay-btn">Pedir via WhatsApp</button>
+                        </a>
+                    </div>
                 </div>
                 <div class="p-info">
-                    <h3>Hoodie Classic</h3>
-                    <p>Black Store</p>
+                    <div>
+                        <p class="p-brand">Black Store</p>
+                        <h3 class="p-name">Shorts + Tee Preto</h3>
+                    </div>
                     <div class="p-footer">
-                        <span class="price">R$ 159,90</span>
-                        <a href="https://wa.me/5516991821047?text=Quero%20a%20Hoodie%20Classic" class="buy-link" target="_blank">Comprar</a>
+                        <span class="p-price">R$ 189,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Shorts%20+%20Tee%20Preto" class="p-link" target="_blank">Comprar</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Produto 8 -->
-            <div class="product-card" data-category="nike">
-                <div class="p-img-box">
-                    <img src="assets/imagem/834643743479198294.jpg" alt="Air Force 1">
-                </div>
-                <div class="p-info">
-                    <h3>Air Force 1</h3>
-                    <p>Nike Icon</p>
-                    <div class="p-footer">
-                        <span class="price">R$ 479,90</span>
-                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Air%20Force%201" class="buy-link" target="_blank">Comprar</a>
+            <div class="product-card reveal" data-category="nike" style="transition-delay:0.0s">
+                <div class="p-img-wrap">
+                    <span class="p-badge">Hot</span>
+                    <img src="assets/imagem/834643743479198294.jpg" alt="Air Max Plus Kit" loading="lazy">
+                    <div class="p-overlay">
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Air%20Max%20Kit" target="_blank">
+                            <button class="p-overlay-btn">Pedir via WhatsApp</button>
+                        </a>
                     </div>
                 </div>
+                <div class="p-info">
+                    <div>
+                        <p class="p-brand">Nike Air</p>
+                        <h3 class="p-name">Air Max Plus Blue Kit</h3>
+                    </div>
+                    <div class="p-footer">
+                        <span class="p-price">R$ 799,90</span>
+                        <a href="https://wa.me/5516991821047?text=Quero%20o%20Air%20Max%20Kit" class="p-link" target="_blank">Comprar</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div style="text-align:center; margin-top:50px;" class="reveal">
+            <a href="https://wa.me/5516991821047?text=Olá!%20Quero%20ver%20mais%20produtos%20da%20Black%20Store" 
+               class="btn-ghost" target="_blank" style="display:inline-flex;">
+                Ver Mais no WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <!-- STATEMENT / SOBRE -->
+    <section class="statement-section reveal" id="sobre">
+        <div class="statement-left">
+            <p class="statement-tag">Nossa História</p>
+            <h2 class="statement-title">A MARCA<br>DOS<br>ARTISTAS</h2>
+            <p class="statement-text">
+                A Black Store nasceu nas ruas de São Carlos com uma missão simples: trazer o melhor do streetwear autêntico para quem vive o estilo de verdade. Nike, Adidas, Oakley — só o que é real.
+            </p>
+        </div>
+        <div class="statement-right">
+            <div class="stat-box">
+                <div class="stat-box-num">+25K</div>
+                <div class="stat-box-label">Clientes atendidos</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-num">3+</div>
+                <div class="stat-box-label">Anos de história</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-num">100%</div>
+                <div class="stat-box-label">Produtos originais</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-box-num">SP</div>
+                <div class="stat-box-label">São Carlos, Brasil</div>
             </div>
         </div>
     </section>
 
     <!-- LOCALIZAÇÃO -->
     <section class="location-section" id="localizacao">
-        <div class="loc-info">
-            <div class="info-row">
-                <div class="info-label">Endereço</div>
-                <div class="info-value">
-                    Av. Capitão Luiz Brandão, 106<br>
-                    Vila Nery, São Carlos - SP
-                </div>
+        <div class="loc-info reveal">
+            <h2 class="loc-title">NOSSA<br>LOJA</h2>
+            <div class="info-block">
+                <p class="info-label">Endereço</p>
+                <p class="info-value">Av. Capitão Luiz Brandão, 106<br>Vila Nery — São Carlos, SP</p>
             </div>
-            <div class="info-row">
-                <div class="info-label">Horário de Funcionamento</div>
-                <div class="info-value">
-                    Seg - Sex: 09h às 18h<br>
+            <div class="info-block">
+                <p class="info-label">Horário de Funcionamento</p>
+                <p class="info-value">
+                    Seg — Sex: 09h às 18h<br>
                     Sábado: 09h às 13h<br>
                     Domingo: Fechado
-                </div>
+                </p>
             </div>
-            <div class="info-row">
-                <div class="info-label">Contato</div>
-                <div class="info-value">
-                    (16) 99182-1047
-                </div>
+            <div class="info-block">
+                <p class="info-label">Contato</p>
+                <p class="info-value">(16) 99182-1047</p>
             </div>
-            <a href="https://wa.me/5516991821047" class="btn-zap" target="_blank">Chamar no WhatsApp</a>
+            <a href="https://wa.me/5516991821047" class="btn-whatsapp" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Chamar no WhatsApp
+            </a>
         </div>
         <div class="loc-map">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.2343560651486!2d-47.89240612346949!3d-22.011949378865166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94b876c4d54ea79b%3A0xa28b8e61b2d7eb9f!2sAv.%20Capit%C3%A3o%20Luiz%20Brand%C3%A3o%2C%20106%20-%20Vila%20Nery%2C%20S%C3%A3o%20Carlos%20-%20SP%2C%2013568-450!5e0!3m2!1spt-BR!2sbr!4v1701234567890" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3675.2343560651486!2d-47.89240612346949!3d-22.011949378865166!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94b876c4d54ea79b%3A0xa28b8e61b2d7eb9f!2sAv.%20Capit%C3%A3o%20Luiz%20Brand%C3%A3o%2C%20106%20-%20Vila%20Nery%2C%20S%C3%A3o%20Carlos%20-%20SP!5e0!3m2!1spt-BR!2sbr!4v1701234567890"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Localização Black Store">
+            </iframe>
         </div>
     </section>
 
     <!-- FOOTER -->
     <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>BLACK STORE</h4>
-                <ul>
-                    <li>Fundada em 2020</li>
-                    <li>Streetwear Autêntico</li>
-                    <li>Qualidade Garantida</li>
-                    <li>Atendimento Premium</li>
-                </ul>
+        <div class="footer-top">
+            <div class="footer-brand">
+                <div class="footer-logo">BLACK <span>STORE</span></div>
+                <p>A seleção definitiva de streetwear em São Carlos. Autêntico, exclusivo, para quem vive o estilo de verdade.</p>
+                <div class="footer-socials">
+                    <a href="#" class="social-btn" title="Instagram">IG</a>
+                    <a href="#" class="social-btn" title="TikTok">TK</a>
+                    <a href="https://wa.me/5516991821047" class="social-btn" title="WhatsApp" target="_blank">WP</a>
+                </div>
             </div>
-            <div class="footer-section">
-                <h4>Marcas</h4>
+            <div class="footer-col">
+                <h5>Categorias</h5>
                 <ul>
                     <li><a href="#colecao">Nike</a></li>
                     <li><a href="#colecao">Adidas</a></li>
+                    <li><a href="#colecao">Oakley</a></li>
                     <li><a href="#colecao">Roupas</a></li>
                     <li><a href="#colecao">Bonés</a></li>
                 </ul>
             </div>
-            <div class="footer-section">
-                <h4>Sobre</h4>
+            <div class="footer-col">
+                <h5>Informações</h5>
                 <ul>
+                    <li><a href="#sobre">Sobre Nós</a></li>
                     <li><a href="#localizacao">Nossa Loja</a></li>
-                    <li><a href="#localizacao">Localização</a></li>
-                    <li><a href="tel:5516991821047">Contato</a></li>
-                    <li><a href="https://wa.me/5516991821047">WhatsApp</a></li>
+                    <li><a href="#localizacao">Horários</a></li>
+                    <li><a href="tel:5516991821047">Telefone</a></li>
                 </ul>
             </div>
-            <div class="footer-section">
-                <h4>Redes Sociais</h4>
+            <div class="footer-col">
+                <h5>Contato</h5>
                 <ul>
+                    <li><a href="https://wa.me/5516991821047" target="_blank">(16) 99182-1047</a></li>
+                    <li><a href="https://wa.me/5516991821047" target="_blank">WhatsApp</a></li>
                     <li><a href="#">Instagram</a></li>
                     <li><a href="#">TikTok</a></li>
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="https://wa.me/5516991821047">WhatsApp</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2024 BLACK STORE. Todos os direitos reservados. | São Carlos, SP</p>
+            <p>© 2024 Black Store. Todos os direitos reservados.</p>
+            <p>São Carlos, SP — Streetwear Autêntico</p>
         </div>
     </footer>
 
     <!-- WHATSAPP FLOAT -->
-    <a href="https://wa.me/5516991821047" class="wpp-float" target="_blank" title="Clique para abrir WhatsApp">
+    <a href="https://wa.me/5516991821047" class="wpp-float" target="_blank" title="Falar no WhatsApp">
         <svg viewBox="0 0 24 24">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" fill="white"/>
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
         </svg>
     </a>
 
     <script>
-        // CARROSSEL 
-        let currentSlideIndex = 0;
+        // ===== INTRO 3D =====
+        (function () {
+            const stage = document.getElementById('introStage');
+            const intro = document.getElementById('intro');
+            const w1 = document.getElementById('word1');
+            const w2 = document.getElementById('word2');
 
-        function changeCarouselSlide(n) {
-            showCarouselSlide(currentSlideIndex += n);
+            function build(target, text, startDelay) {
+                [...text].forEach((ch, i) => {
+                    const s = document.createElement('span');
+                    s.className = 'intro-char';
+                    s.textContent = ch;
+                    s.style.animationDelay = (startDelay + i * 0.08) + 's';
+                    target.appendChild(s);
+                });
+            }
+            build(w1, 'BLACK', 0.4);
+            build(w2, 'STORE', 0.85);
+
+            function endIntro() {
+                if (intro.classList.contains('done')) return;
+                intro.classList.add('done');
+                document.body.classList.remove('intro-lock');
+                setTimeout(() => intro.remove(), 900);
+            }
+            // termina após a animação completa
+            setTimeout(endIntro, 3200);
+            // permite pular clicando
+            intro.addEventListener('click', endIntro);
+        })();
+
+        // ===== NAVBAR SCROLL =====
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+
+        // ===== PARALLAX HERO =====
+        const heroBg = document.getElementById('heroBg');
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            if (scrolled < window.innerHeight) {
+                heroBg.style.transform = `scale(1.05) translateY(${scrolled * 0.25}px)`;
+            }
+        }, { passive: true });
+
+        // ===== MOBILE NAV =====
+        const menuToggle = document.getElementById('menuToggle');
+        const menuIcon = document.getElementById('menuIcon');
+        const mobileNav = document.getElementById('mobileNav');
+        let mobileOpen = false;
+
+        menuToggle.addEventListener('click', () => {
+            mobileOpen = !mobileOpen;
+            mobileNav.classList.toggle('open', mobileOpen);
+            menuIcon.textContent = mobileOpen ? '✕' : '☰';
+        });
+
+        function closeMobileNav() {
+            mobileOpen = false;
+            mobileNav.classList.remove('open');
+            menuIcon.textContent = '☰';
         }
 
-        function currentCarouselSlide(n) {
-            showCarouselSlide(currentSlideIndex = n);
-        }
+        // ===== SCROLL REVEAL =====
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-        function showCarouselSlide(n) {
-            const slides = document.querySelectorAll('.carousel-slide');
-            const dots = document.querySelectorAll('.dot');
-            
-            if (n >= slides.length) { currentSlideIndex = 0; }
-            if (n < 0) { currentSlideIndex = slides.length - 1; }
-            
-            slides.forEach(slide => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
-            
-            slides[currentSlideIndex].classList.add('active');
-            dots[currentSlideIndex].classList.add('active');
-        }
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-        // Auto carousel (desativado pois o carrossel foi removido)
-        // setInterval(() => {
-        //     changeCarouselSlide(1);
-        // }, 5000);
-
-
-        // Função de Filtro de Produtos
+        // ===== PRODUCT FILTER =====
         function filterProducts(category, btn) {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
 
             const cards = document.querySelectorAll('.product-card');
-            cards.forEach(card => {
-                if (category === 'all' || card.dataset.category === category) {
+            cards.forEach((card, i) => {
+                const match = category === 'all' || card.dataset.category === category;
+                if (match) {
                     card.style.display = 'flex';
-                    setTimeout(() => card.style.opacity = '1', 10);
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        card.style.transition = `opacity 0.4s ease ${i * 0.05}s, transform 0.4s ease ${i * 0.05}s`;
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 10);
                 } else {
-                    card.style.display = 'none';
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(-10px)';
+                    setTimeout(() => { card.style.display = 'none'; }, 300);
                 }
             });
         }
 
-        // Menu Mobile
-        document.querySelector('.menu-toggle').addEventListener('click', () => {
-            const nav = document.querySelector('.nav-links');
-            nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
-            if (nav.style.display === 'flex') {
-                nav.style.flexDirection = 'column';
-                nav.style.position = 'absolute';
-                nav.style.top = '70px';
-                nav.style.left = '0';
-                nav.style.width = '100%';
-                nav.style.background = 'rgba(5, 5, 5, 0.95)';
-                nav.style.padding = '20px';
-                nav.style.borderBottom = '1px solid #333';
-                nav.style.gap = '15px';
-            }
-        });
-
-        // Smooth scroll para links internos
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                const target = document.querySelector(a.getAttribute('href'));
                 if (target) {
+                    e.preventDefault();
                     target.scrollIntoView({ behavior: 'smooth' });
                 }
             });
@@ -1077,4 +1610,3 @@
     </script>
 </body>
 </html>
-
